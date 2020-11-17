@@ -1,0 +1,45 @@
+A third party finance service ‘X’ provides currency conversion rates every 5min. For the purpose of this problem you can assume that the service ‘X’ places the files in the directory: "/tmp/exchange”. This directory contains two types of files:
+Build file
+Data files  
+
+buildID.txt
+This file contains the build number corresponding to the data and the latest data file name to be read. A sample build file might look something like this -
+
+Contents of buildID.txt 
+{
+   “buildID”:  “1234”,
+   “FileName”: “20201010-0000.txt”,
+   “Version”:  “v1"
+} 
+
+
+Data Files
+These are the files which contain the actual currency conversion data. The latest data file will pointed to by the “FileName” field in buildID.txt. A sample data file will look something like this -
+
+20201010-0000.txt
+{
+   “CAD_USD”: 0.98,
+   “FR_USD”: 0.9,
+….
+
+}
+
+The finance service’s producer will create new conversions every 5 mins. This means replacing the buildID.txt with the new buildID and a new location of the data file appended with a different timestamp: e.g "20201010-0005.txt”.  After 5min directory will contain following files:
+buildID.txt
+20201010-0000.txt
+20201010-0005.txt
+
+With contents of buildID.txt being:
+{
+   “buildID”:  “1235”,
+   “FileName”: “20201010-0005.txt”,
+   “Version”:  “v1"
+} 
+
+
+You need to write an application that will read this data and keep the conversions in memory. Your application needs continuously poll "/tmp/exchange" directory for the buildID file every 1min and read the latest contents of the buildID and the corresponding data file. You need to process the currency data and store it in a map in memory for quick access. The map would look something like this - 
+{
+	“CAD_USD”: 0.98,
+	“FR_USD”: 0.9,
+}
+If during a poll, the buildID is same as what has already been read, the application should not replace contents of the currency conversions in memory.
